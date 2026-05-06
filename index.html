@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08111f">
+  <title>ตารางงานสวิชสัมผัส</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1324;
+      --panel: rgba(10, 18, 34, 0.92);
+      --panel-2: rgba(18, 28, 49, 0.9);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --text: #f6fbff;
+      --muted: #9ca9bf;
+      --accent: #4ce0b3;
+      --accent-2: #f8c85f;
+      --good: #2dcc8b;
+      --warn: #f2c14f;
+      --bad: #ef6a67;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --radius-sm: 16px;
+      --font: "Segoe UI", Tahoma, sans-serif;
+      --max-width: 520px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(76, 224, 179, 0.14), transparent 26%),
+        radial-gradient(circle at bottom left, rgba(248, 200, 95, 0.12), transparent 22%),
+        linear-gradient(180deg, #030611 0%, #07101c 50%, #050816 100%);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 90%);
+      pointer-events: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible + .check-box {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 10px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hero {
+      border-radius: 26px;
+      padding: 12px;
+      animation: fadeUp 420ms ease;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.16rem;
+      line-height: 1.2;
+    }
+
+    .subtext {
+      margin: 6px 0 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .hero-side {
+      min-width: 84px;
+      padding: 8px 10px;
+      border-radius: 16px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-side strong {
+      display: block;
+      font-size: 1.12rem;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .hero-side span {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .metric {
+      padding: 8px 9px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 0.94rem;
+      margin-bottom: 3px;
+    }
+
+    .metric span {
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .workspace {
+      flex: 1;
+      min-height: auto;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
+      animation: fadeUp 520ms ease;
+    }
+
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      position: sticky;
+      top: 8px;
+      z-index: 6;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .tab-btn {
+      padding: 12px 8px;
+      border-radius: 16px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(76, 224, 179, 0.18), rgba(43, 178, 236, 0.14));
+      color: var(--text);
+      border: 1px solid rgba(76, 224, 179, 0.24);
+    }
+
+    .tab-btn:active {
+      transform: scale(0.98);
+    }
+
+    .views {
+      position: relative;
+      flex: none;
+      min-height: auto;
+    }
+
+    .view {
+      display: none;
+      height: auto;
+      overflow: visible;
+      padding: 10px;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .card {
+      padding: 12px;
+      border-radius: 18px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-head h2,
+    .card-head h3 {
+      margin: 0;
+      font-size: 0.94rem;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .info-pop {
+      position: relative;
+      display: inline-block;
+      flex: none;
+    }
+
+    .info-trigger {
+      list-style: none;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .info-trigger::-webkit-details-marker {
+      display: none;
+    }
+
+    .info-trigger:focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .info-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: min(230px, calc(100vw - 44px));
+      padding: 10px 11px;
+      border-radius: 14px;
+      border: 1px solid var(--line-strong);
+      background: rgba(8, 14, 28, 0.98);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      z-index: 15;
+    }
+
+    .info-pop:not([open]) .info-panel {
+      display: none;
+    }
+
+    @media (hover: hover) {
+      .info-pop:hover .info-panel,
+      .info-pop:focus-within .info-panel {
+        display: block;
+      }
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 10px 8px;
+      border-radius: 14px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, var(--accent), #31baf1);
+      color: #04101c;
+      border-color: transparent;
+    }
+
+    .action-btn:active {
+      transform: scale(0.98);
+    }
+
+    .alert-box {
+      display: grid;
+      gap: 4px;
+      padding: 10px 11px;
+      margin-top: 8px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .alert-box strong {
+      display: block;
+      font-size: 0.86rem;
+    }
+
+    .alert-box p,
+    .note,
+    .summary-text {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 5px;
+    }
+
+    .progress-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .progress {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress > i {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 220ms ease;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 6px;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: border-color 180ms ease, background 180ms ease;
+      align-items: center;
+    }
+
+    .task.active {
+      border-color: rgba(76, 224, 179, 0.5);
+      background: rgba(76, 224, 179, 0.08);
+    }
+
+    .task.cutoff {
+      border-color: rgba(248, 200, 95, 0.4);
+    }
+
+    .task.done {
+      opacity: 0.82;
+    }
+
+    .check {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin-top: 0;
+    }
+
+    .check input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      margin: 0;
+    }
+
+    .check-box {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all 180ms ease;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .check input:checked + .check-box {
+      border-color: transparent;
+      color: #04100c;
+      background: linear-gradient(135deg, var(--accent), #8af4d6);
+      box-shadow: 0 10px 22px rgba(76, 224, 179, 0.28);
+    }
+
+    .task-time {
+      display: inline-flex;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      color: #d8e1ef;
+    }
+
+    .task-title {
+      margin: 2px 0 0;
+      font-size: 0.9rem;
+      line-height: 1.25;
+    }
+
+    .task-main {
+      min-width: 0;
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .task-flags {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .task-tag {
+      padding: 3px 6px;
+      border-radius: 999px;
+      font-size: 0.64rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .task-tag.warn {
+      color: #2c1c00;
+      background: linear-gradient(135deg, #ffd166, #ffb74f);
+    }
+
+    .task-help .info-trigger {
+      width: 20px;
+      height: 20px;
+      font-size: 0.72rem;
+    }
+
+    .calendar-toolbar {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .nav-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 1.1rem;
+    }
+
+    .month-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .legend-dot.good { background: var(--good); }
+    .legend-dot.warn { background: var(--warn); }
+    .legend-dot.bad { background: var(--bad); }
+
+    .calendar-weekdays,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .calendar-weekdays {
+      margin-bottom: 6px;
+    }
+
+    .calendar-weekdays span {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .day-cell {
+      min-height: 54px;
+      padding: 7px 4px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: grid;
+      align-content: space-between;
+      justify-items: center;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      border-color: transparent;
+      pointer-events: none;
+    }
+
+    .day-cell:not(.empty):active {
+      transform: scale(0.97);
+    }
+
+    .day-cell span {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .day-cell small {
+      font-size: 0.66rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .day-cell.good {
+      background: rgba(45, 204, 139, 0.2);
+      border-color: rgba(45, 204, 139, 0.38);
+    }
+
+    .day-cell.warn {
+      background: rgba(242, 193, 79, 0.2);
+      border-color: rgba(242, 193, 79, 0.34);
+    }
+
+    .day-cell.bad {
+      background: rgba(239, 106, 103, 0.18);
+      border-color: rgba(239, 106, 103, 0.28);
+    }
+
+    .day-cell.future {
+      opacity: 0.45;
+    }
+
+    .day-cell.selected {
+      border-color: rgba(255, 255, 255, 0.92);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .day-cell.today {
+      position: relative;
+    }
+
+    .day-cell.today::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .day-detail {
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .detail-badge {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-task {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .detail-task.done {
+      border-color: rgba(45, 204, 139, 0.26);
+      background: rgba(45, 204, 139, 0.08);
+    }
+
+    .detail-task .mark {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .detail-task.done .mark {
+      background: var(--good);
+      color: #04100c;
+    }
+
+    .detail-task strong {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.35;
+      margin-bottom: 2px;
+    }
+
+    .detail-task span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat-box {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-box strong {
+      display: block;
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .stat-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .recent-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .recent-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 15px;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .recent-item strong {
+      font-size: 0.9rem;
+    }
+
+    .recent-item span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .status-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #0c1020;
+    }
+
+    .status-chip.good { background: var(--good); }
+    .status-chip.warn { background: var(--warn); }
+    .status-chip.bad { background: var(--bad); color: #fff4f4; }
+
+    .empty-text {
+      padding: 14px;
+      border-radius: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%) translateY(18px);
+      width: min(calc(100% - 24px), 420px);
+      padding: 13px 15px;
+      border-radius: 18px;
+      background: rgba(6, 12, 24, 0.96);
+      color: var(--text);
+      border: 1px solid rgba(76, 224, 179, 0.22);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+      font-size: 0.92rem;
+      z-index: 30;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .app {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 1.16rem;
+      }
+
+      .hero-metrics,
+      .stats-grid,
+      .action-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-metrics .metric:last-child,
+      .stats-grid .stat-box:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .tab-btn {
+        font-size: 0.84rem;
+        padding-inline: 4px;
+      }
+
+      .day-cell {
+        min-height: 50px;
+      }
+
+      .task-title {
+        font-size: 0.92rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero glass" aria-label="ภาพรวมประจำวัน">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">แผนงานประจำวัน</p>
+          <h1>ติดตามงานขายสวิชสัมผัสให้ทันทุกช่วงขนส่ง</h1>
+          <p class="subtext" id="todayLabel">กำลังโหลดวันที่...</p>
+        </div>
+        <div class="hero-side">
+          <strong id="heroPercent">0%</strong>
+          <span>สำเร็จวันนี้</span>
+        </div>
+      </div>
+      <div class="hero-metrics">
+        <div class="metric">
+          <strong id="currentTimeLabel">--:--</strong>
+          <span>เวลาตอนนี้</span>
+        </div>
+        <div class="metric">
+          <strong id="doneCount">0/0</strong>
+          <span>งานที่ทำแล้ว</span>
+        </div>
+        <div class="metric">
+          <strong id="monthlyPercent">0%</strong>
+          <span>ค่าเฉลี่ยเดือนนี้</span>
+        </div>
+      </div>
+      <div class="progress-wrap" style="margin-top:10px;">
+        <div class="progress-label">
+          <div class="title-row">
+            <span id="todaySummary">กำลังคำนวณ...</span>
+            <details class="info-pop">
+              <summary class="info-trigger" aria-label="คำอธิบายความคืบหน้า">i</summary>
+              <div class="info-panel">แถบนี้สรุปงานที่ทำเสร็จแล้วของวันนี้แบบย่อ เพื่อให้เห็นภาพรวมเร็วโดยไม่กินพื้นที่หน้าจอ</div>
+            </details>
+          </div>
+          <strong id="todayPercentText">0%</strong>
+        </div>
+        <div class="progress" aria-hidden="true">
+          <i id="dayProgressBar"></i>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace glass">
+      <div class="tab-bar" role="tablist" aria-label="เมนูหลัก">
+        <button class="tab-btn active" id="tabToday" data-tab="today" type="button" role="tab" aria-selected="true">วันนี้</button>
+        <button class="tab-btn" id="tabCalendar" data-tab="calendar" type="button" role="tab" aria-selected="false">ปฏิทิน</button>
+        <button class="tab-btn" id="tabSummary" data-tab="summary" type="button" role="tab" aria-selected="false">สรุป</button>
+      </div>
+
+      <div class="views">
+        <section class="view active" id="viewToday" data-view="today">
+          <div class="stack">
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>ปุ่มลัด</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายปุ่มลัด">i</summary>
+                    <div class="info-panel">รวมปุ่มที่ใช้บ่อยไว้ด้านบนเพื่อให้แตะได้ไวบนมือถือ เช่น เปิดเสียง ทดสอบเสียง คัดลอกเวลาสำคัญ และล้างเช็กลิสต์ของวันนี้</div>
+                  </details>
+                </div>
+              </div>
+              <div class="action-grid">
+                <button class="action-btn primary" id="enableAlertBtn" type="button">เปิดเสียง</button>
+                <button class="action-btn" id="beepTestBtn" type="button">ทดสอบปี๊ป</button>
+                <button class="action-btn" id="exportHintBtn" type="button">คัดลอกเวลา</button>
+                <button class="action-btn" id="resetTodayBtn" type="button">ล้างวันนี้</button>
+              </div>
+              <div class="alert-box" id="alertStatus">
+                <strong>ยังไม่ได้เปิดเสียงแจ้งเตือน</strong>
+                <p>แตะปุ่มเปิดเสียงหนึ่งครั้ง เพื่อให้เบราว์เซอร์อนุญาตเล่นเสียงปี๊ปอัตโนมัติ และจะเน้นเสียงพิเศษช่วงตัดรอบ 10:00 กับ 14:00</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>เช็กลิสต์ประจำวัน</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายเช็กลิสต์">i</summary>
+                    <div class="info-panel">แตะช่องสี่เหลี่ยมเพื่อบันทึกว่างานเสร็จแล้ว รายการที่มีป้ายสีเหลืองคือช่วงตัดรอบขนส่ง ส่วนรายละเอียดแต่ละงานกดปุ่ม i ในแถวนั้นได้</div>
+                  </details>
+                </div>
+              </div>
+              <div class="timeline" id="taskList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="viewCalendar" data-view="calendar">
+          <div class="stack">
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>ปฏิทินย้อนหลัง</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายปฏิทินย้อนหลัง">i</summary>
+                    <div class="info-panel">แตะวันที่เพื่อดูรายการงานของวันนั้น สีเขียวคือทำได้ส่วนใหญ่ สีเหลืองคือทำไปบ้าง และสีแดงคือทำน้อยหรือแทบไม่ได้ทำ</div>
+                  </details>
+                </div>
+              </div>
+              <div class="calendar-toolbar">
+                <button class="nav-btn" id="prevMonthBtn" type="button" aria-label="เดือนก่อนหน้า">&lt;</button>
+                <div class="month-title" id="calendarMonthLabel">กำลังโหลด...</div>
+                <button class="nav-btn" id="nextMonthBtn" type="button" aria-label="เดือนถัดไป">&gt;</button>
+              </div>
+              <div class="legend">
+                <span class="legend-item"><i class="legend-dot good"></i>ส่วนใหญ่ทำแล้ว</span>
+                <span class="legend-item"><i class="legend-dot warn"></i>ทำไปบ้าง</span>
+                <span class="legend-item"><i class="legend-dot bad"></i>ทำน้อยหรือยังไม่ทำ</span>
+              </div>
+              <div class="calendar-weekdays">
+                <span>อา</span>
+                <span>จ</span>
+                <span>อ</span>
+                <span>พ</span>
+                <span>พฤ</span>
+                <span>ศ</span>
+                <span>ส</span>
+              </div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2 id="selectedDateTitle">รายละเอียดรายวัน</h2>
+                </div>
+              </div>
+              <div class="day-detail">
+                <p class="hint" id="selectedDateHint">เลือกวันที่จากปฏิทิน</p>
+                <div class="detail-badges" id="selectedDateBadges"></div>
+                <div class="progress" aria-hidden="true">
+                  <i id="selectedDayBar"></i>
+                </div>
+                <div class="detail-list" id="selectedTaskList"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="viewSummary" data-view="summary">
+          <div class="stack">
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>สรุปรายวันและรายเดือน</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายสรุปรายวันและรายเดือน">i</summary>
+                    <div class="info-panel">ส่วนนี้รวมตัวเลขสำคัญของวันนี้และของเดือน เช่น เปอร์เซ็นต์เฉลี่ย วันที่มีการบันทึก และวันที่ทำได้ดีที่สุด</div>
+                  </details>
+                </div>
+              </div>
+              <div class="stats-grid">
+                <div class="stat-box">
+                  <strong id="summaryTodayPercent">0%</strong>
+                  <span>เปอร์เซ็นต์สำเร็จวันนี้</span>
+                </div>
+                <div class="stat-box">
+                  <strong id="summaryMonthAverage">0%</strong>
+                  <span>ค่าเฉลี่ยสำเร็จเดือนนี้</span>
+                </div>
+                <div class="stat-box">
+                  <strong id="summaryTrackedDays">0</strong>
+                  <span>วันที่มีการบันทึกในเดือนนี้</span>
+                </div>
+                <div class="stat-box">
+                  <strong id="summaryBestDay">-</strong>
+                  <span>วันที่ทำได้ดีที่สุด</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>สรุปข้อความ</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายสรุปข้อความ">i</summary>
+                    <div class="info-panel">ย่อผลการทำงานของเดือนเป็นข้อความสั้น ๆ อ่านเร็ว โดยเน้นทั้งภาพรวมและความสม่ำเสมอของรอบขนส่ง</div>
+                  </details>
+                </div>
+              </div>
+              <div class="stack">
+                <p class="summary-text" id="monthSummary">กำลังคำนวณ...</p>
+                <p class="summary-text" id="monthCutoffSummary">กำลังคำนวณรอบขนส่ง...</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>วันที่บันทึกล่าสุด</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายวันที่บันทึกล่าสุด">i</summary>
+                    <div class="info-panel">ใช้ย้อนดูวันที่เพิ่งบันทึกล่าสุดอย่างรวดเร็ว ถ้าแตะรายการ ระบบจะพาไปเปิดหน้าปฏิทินและแสดงรายละเอียดของวันนั้นทันที</div>
+                  </details>
+                </div>
+              </div>
+              <div class="recent-list" id="recentDaysList"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "touch-switch-schedule-v2";
+      var LEGACY_STORAGE_KEY = "touch-switch-schedule-v1";
+      var ALERT_KEY = "touch-switch-alert-v1";
+      var DAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+      var MONTHS = [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ];
+      var tasks = [
+        { id: "morning-pack", start: "07:00", end: "09:30", title: "แพ็คของรอบเช้า", detail: "สำคัญมาก ต้องเตรียมของให้พร้อมก่อนตัดรอบ", critical: true },
+        { id: "morning-ship", start: "09:30", end: "10:00", title: "ออกไปส่งของรอบเช้า", detail: "ตัดรอบ 10:00", cutoff: true, critical: true },
+        { id: "reply-breakfast", start: "10:00", end: "11:30", title: "ตอบแชทลูกค้า & ทานข้าวเช้า", detail: "เคลียร์แชทและเช็กออเดอร์ใหม่" },
+        { id: "afternoon-pack", start: "11:30", end: "13:30", title: "แพ็คของรอบบ่าย", detail: "จัดของให้ทันรอบขนส่งบ่าย", critical: true },
+        { id: "afternoon-ship", start: "13:30", end: "14:00", title: "ออกไปส่งของรอบบ่าย", detail: "ตัดรอบ 14:00", cutoff: true, critical: true },
+        { id: "lunch", start: "14:00", end: "15:00", title: "พักทานข้าวกลางวัน", detail: "พักสายตาและเติมพลัง" },
+        { id: "content", start: "15:00", end: "17:30", title: "ถ่ายคลิป ทำคอนเทนต์ ลงเพจ", detail: "เก็บคอนเทนต์และลงโพสต์" },
+        { id: "exercise", start: "17:30", end: "19:00", title: "ออกกำลังกาย & พักผ่อน", detail: "รีเฟรชร่างกายก่อนช่วงเย็น" },
+        { id: "dinner", start: "19:00", end: "20:30", title: "พักผ่อน & ทานข้าวเย็น", detail: "พักให้พอเพื่อทำงานต่อ" },
+        { id: "assemble-qc", start: "20:30", end: "22:00", title: "ประกอบสวิช & QC เตรียมของวันพรุ่งนี้", detail: "ตรวจคุณภาพและจัดคิววันถัดไป", critical: true }
+      ];
+
+      var state = loadState();
+      var alertState = loadAlertState();
+      var audioCtx = null;
+      var toastTimer = null;
+      var currentDayKey = getDayKey(new Date());
+      var activeTab = "today";
+      var calendarCursor = {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth()
+      };
+      var selectedDayKey = currentDayKey;
+
+      var todayLabelEl = document.getElementById("todayLabel");
+      var heroPercentEl = document.getElementById("heroPercent");
+      var currentTimeLabelEl = document.getElementById("currentTimeLabel");
+      var doneCountEl = document.getElementById("doneCount");
+      var monthlyPercentEl = document.getElementById("monthlyPercent");
+      var todaySummaryEl = document.getElementById("todaySummary");
+      var todayPercentTextEl = document.getElementById("todayPercentText");
+      var dayProgressBarEl = document.getElementById("dayProgressBar");
+      var taskListEl = document.getElementById("taskList");
+      var alertStatusEl = document.getElementById("alertStatus");
+      var monthSummaryEl = document.getElementById("monthSummary");
+      var monthCutoffSummaryEl = document.getElementById("monthCutoffSummary");
+      var recentDaysListEl = document.getElementById("recentDaysList");
+      var summaryTodayPercentEl = document.getElementById("summaryTodayPercent");
+      var summaryMonthAverageEl = document.getElementById("summaryMonthAverage");
+      var summaryTrackedDaysEl = document.getElementById("summaryTrackedDays");
+      var summaryBestDayEl = document.getElementById("summaryBestDay");
+      var calendarMonthLabelEl = document.getElementById("calendarMonthLabel");
+      var calendarGridEl = document.getElementById("calendarGrid");
+      var selectedDateTitleEl = document.getElementById("selectedDateTitle");
+      var selectedDateHintEl = document.getElementById("selectedDateHint");
+      var selectedDateBadgesEl = document.getElementById("selectedDateBadges");
+      var selectedDayBarEl = document.getElementById("selectedDayBar");
+      var selectedTaskListEl = document.getElementById("selectedTaskList");
+      var enableAlertBtn = document.getElementById("enableAlertBtn");
+      var beepTestBtn = document.getElementById("beepTestBtn");
+      var exportHintBtn = document.getElementById("exportHintBtn");
+      var resetTodayBtn = document.getElementById("resetTodayBtn");
+      var prevMonthBtn = document.getElementById("prevMonthBtn");
+      var nextMonthBtn = document.getElementById("nextMonthBtn");
+      var toastEl = document.getElementById("toast");
+
+      bindEvents();
+      renderAll();
+      syncAlertUI();
+      runAlertChecks(new Date());
+
+      setInterval(function () {
+        var now = new Date();
+        var newKey = getDayKey(now);
+        if (newKey !== currentDayKey) {
+          var previousDayKey = currentDayKey;
+          currentDayKey = newKey;
+          if (selectedDayKey === previousDayKey) {
+            selectedDayKey = newKey;
+          }
+        }
+        renderHeader();
+        updateSummary();
+        renderTasks();
+        renderCalendar();
+        renderSelectedDay();
+        runAlertChecks(now);
+      }, 30000);
+
+      function bindEvents() {
+        var tabs = document.querySelectorAll("[data-tab]");
+        var i;
+        for (i = 0; i < tabs.length; i++) {
+          tabs[i].addEventListener("click", onTabClick);
+        }
+
+        enableAlertBtn.addEventListener("click", function () {
+          ensureAudioReady();
+          alertState.enabled = true;
+          saveAlertState();
+          syncAlertUI();
+          beep(2);
+          showToast("เปิดเสียงแจ้งเตือนแล้ว");
+        });
+
+        beepTestBtn.addEventListener("click", function () {
+          ensureAudioReady();
+          beep(3);
+          showToast("ทดสอบเสียงปี๊ปเรียบร้อย");
+        });
+
+        exportHintBtn.addEventListener("click", function () {
+          var message = [
+            "เวลาสำคัญสำหรับตั้งปลุกในแอปนาฬิกา",
+            "- 09:25 เตรียมส่งรอบเช้า",
+            "- 10:00 ตัดรอบส่งเช้า",
+            "- 13:25 เตรียมส่งรอบบ่าย",
+            "- 14:00 ตัดรอบส่งบ่าย"
+          ].join("\n");
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(message).then(function () {
+              showToast("คัดลอกเวลาสำคัญแล้ว");
+            }).catch(function () {
+              window.alert(message);
+            });
+          } else {
+            window.alert(message);
+          }
+        });
+
+        resetTodayBtn.addEventListener("click", function () {
+          if (!window.confirm("ต้องการล้างเช็กลิสต์ของวันนี้ใช่ไหม")) {
+            return;
+          }
+          state[currentDayKey] = { tasks: {}, updatedAt: new Date().toISOString() };
+          saveState();
+          renderAll();
+          showToast("ล้างเช็กลิสต์วันนี้แล้ว");
+        });
+
+        prevMonthBtn.addEventListener("click", function () {
+          moveCalendar(-1);
+        });
+
+        nextMonthBtn.addEventListener("click", function () {
+          moveCalendar(1);
+        });
+      }
+
+      function renderAll() {
+        renderHeader();
+        updateSummary();
+        renderTasks();
+        renderCalendar();
+        renderSelectedDay();
+      }
+
+      function renderHeader() {
+        var now = new Date();
+        todayLabelEl.textContent = "วันนี้ " + DAYS[now.getDay()] + " " + now.getDate() + " " + MONTHS[now.getMonth()] + " " + (now.getFullYear() + 543);
+        currentTimeLabelEl.textContent = pad(now.getHours()) + ":" + pad(now.getMinutes()) + " น.";
+      }
+
+      function renderTasks() {
+        var todayState = getDayState(currentDayKey, true);
+        var now = new Date();
+        var minutesNow = now.getHours() * 60 + now.getMinutes();
+        var html = "";
+        var i;
+
+        for (i = 0; i < tasks.length; i++) {
+          var task = tasks[i];
+          var done = !!todayState.tasks[task.id];
+          var active = minutesNow >= timeToMinutes(task.start) && minutesNow < timeToMinutes(task.end);
+          var classes = "task";
+          var flags = "";
+          var helpText = task.detail;
+
+          if (task.cutoff) {
+            classes += " cutoff";
+          }
+          if (active) {
+            classes += " active";
+            flags += '<span class="task-tag">ตอนนี้</span>';
+          }
+          if (done) {
+            classes += " done";
+          }
+          if (task.critical) {
+            flags += '<span class="task-tag">หลัก</span>';
+            helpText += " • งานสำคัญ";
+          }
+          if (task.cutoff) {
+            flags += '<span class="task-tag warn">ตัดรอบ</span>';
+            helpText += " • ช่วงตัดรอบขนส่ง";
+          }
+
+          html += '' +
+            '<article class="' + classes + '">' +
+              '<label class="check" aria-label="ทำเครื่องหมาย ' + escapeHtml(task.title) + '">' +
+                '<input type="checkbox" data-task-id="' + task.id + '"' + (done ? " checked" : "") + '>' +
+                '<span class="check-box">' + (done ? "✓" : "") + '</span>' +
+              '</label>' +
+              '<div class="task-main">' +
+                '<div class="task-top">' +
+                  '<span class="task-time">' + task.start + " - " + task.end + '</span>' +
+                  '<div class="task-flags">' +
+                    flags +
+                    '<details class="info-pop task-help">' +
+                      '<summary class="info-trigger" aria-label="คำอธิบาย ' + escapeHtml(task.title) + '">i</summary>' +
+                      '<div class="info-panel">' + escapeHtml(helpText) + '</div>' +
+                    '</details>' +
+                  '</div>' +
+                '</div>' +
+                '<h3 class="task-title">' + escapeHtml(task.title) + '</h3>' +
+              '</div>' +
+            '</article>';
+        }
+
+        taskListEl.innerHTML = html;
+
+        var inputs = taskListEl.querySelectorAll("input[type='checkbox']");
+        for (i = 0; i < inputs.length; i++) {
+          inputs[i].addEventListener("change", onToggleTask);
+        }
+      }
+
+      function onToggleTask(event) {
+        var input = event.target;
+        var taskId = input.getAttribute("data-task-id");
+        var todayState = getDayState(currentDayKey, true);
+        if (input.checked) {
+          todayState.tasks[taskId] = true;
+        } else {
+          delete todayState.tasks[taskId];
+        }
+        todayState.updatedAt = new Date().toISOString();
+        saveState();
+        renderAll();
+      }
+
+      function updateSummary() {
+        var todayInfo = getCompletionInfo(currentDayKey);
+        var now = new Date();
+        var monthInfo = getMonthStats(now.getFullYear(), now.getMonth());
+        var recentItems = getRecentTrackedDays(6);
+        var cutoffInfo = getCutoffCompletionForMonth(now.getFullYear(), now.getMonth());
+
+        heroPercentEl.textContent = todayInfo.percent + "%";
+        doneCountEl.textContent = todayInfo.doneCount + "/" + todayInfo.total;
+        monthlyPercentEl.textContent = monthInfo.average + "%";
+        todayPercentTextEl.textContent = todayInfo.percent + "%";
+        dayProgressBarEl.style.width = todayInfo.percent + "%";
+        todaySummaryEl.textContent = todayInfo.doneCount + "/" + todayInfo.total + " งานวันนี้";
+
+        summaryTodayPercentEl.textContent = todayInfo.percent + "%";
+        summaryMonthAverageEl.textContent = monthInfo.average + "%";
+        summaryTrackedDaysEl.textContent = String(monthInfo.daysTracked);
+        summaryBestDayEl.textContent = monthInfo.bestText;
+
+        monthSummaryEl.textContent = "เดือนนี้บันทึกไว้ " + monthInfo.daysTracked + " วัน ค่าเฉลี่ยสำเร็จ " + monthInfo.average + "% และวันที่ทำได้ดีที่สุดคือ " + monthInfo.bestText;
+        monthCutoffSummaryEl.textContent = "งานตัดรอบขนส่งทำสำเร็จเฉลี่ย " + cutoffInfo.average + "% จากวันที่มีการบันทึกในเดือนนี้";
+
+        renderRecentDays(recentItems);
+      }
+
+      function renderRecentDays(items) {
+        var i;
+        var html = "";
+
+        if (!items.length) {
+          recentDaysListEl.innerHTML = '<div class="empty-text">ยังไม่มีข้อมูลย้อนหลัง เมื่อเริ่มกดเช็กลิสต์ ระบบจะนำวันล่าสุดมาแสดงตรงนี้</div>';
+          return;
+        }
+
+        for (i = 0; i < items.length; i++) {
+          html += '' +
+            '<button class="recent-item" type="button" data-day-key="' + items[i].key + '">' +
+              '<div>' +
+                '<strong>' + formatDateKey(items[i].key) + '</strong>' +
+                '<span>ทำแล้ว ' + items[i].doneCount + '/' + items[i].total + ' งาน</span>' +
+              '</div>' +
+              '<span class="status-chip ' + items[i].statusClass + '">' + items[i].percent + '%</span>' +
+            '</button>';
+        }
+
+        recentDaysListEl.innerHTML = html;
+
+        var buttons = recentDaysListEl.querySelectorAll("[data-day-key]");
+        for (i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener("click", function () {
+            selectedDayKey = this.getAttribute("data-day-key");
+            syncCalendarCursorToSelectedDay();
+            switchTab("calendar");
+            renderCalendar();
+            renderSelectedDay();
+          });
+        }
+      }
+
+      function renderCalendar() {
+        var year = calendarCursor.year;
+        var month = calendarCursor.month;
+        var firstDate = new Date(year, month, 1);
+        var firstDay = firstDate.getDay();
+        var lastDate = new Date(year, month + 1, 0).getDate();
+        var now = new Date();
+        var todayKey = getDayKey(now);
+        var i;
+        var html = "";
+
+        calendarMonthLabelEl.textContent = MONTHS[month] + " " + (year + 543);
+
+        for (i = 0; i < firstDay; i++) {
+          html += '<div class="day-cell empty"></div>';
+        }
+
+        for (i = 1; i <= lastDate; i++) {
+          var dayKey = getDayKey(new Date(year, month, i));
+          var info = getCompletionInfo(dayKey);
+          var future = dayKey > todayKey;
+          var statusClass = future ? "future" : getPercentClass(info.percent);
+          var cellClass = "day-cell " + statusClass;
+
+          if (dayKey === todayKey) {
+            cellClass += " today";
+          }
+          if (dayKey === selectedDayKey) {
+            cellClass += " selected";
+          }
+
+          html += '' +
+            '<button class="' + cellClass + '" type="button" data-day-key="' + dayKey + '">' +
+              '<span>' + i + '</span>' +
+              '<small>' + (future ? "-" : info.percent + "%") + '</small>' +
+            '</button>';
+        }
+
+        calendarGridEl.innerHTML = html;
+
+        var buttons = calendarGridEl.querySelectorAll("[data-day-key]");
+        for (i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener("click", function () {
+            selectedDayKey = this.getAttribute("data-day-key");
+            renderCalendar();
+            renderSelectedDay();
+          });
+        }
+      }
+
+      function renderSelectedDay() {
+        var info = getCompletionInfo(selectedDayKey);
+        var dateParts = selectedDayKey.split("-");
+        var dateObj = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
+        var future = selectedDayKey > currentDayKey;
+        var badgesHtml = "";
+        var tasksHtml = "";
+        var i;
+
+        selectedDateTitleEl.textContent = "รายละเอียด " + formatDateKey(selectedDayKey);
+        selectedDateHintEl.textContent = future ? "วันในอนาคต แสดงตามตารางที่วางไว้" : "ดูย้อนหลังว่าวันนั้นทำอะไรเสร็จแล้วบ้าง";
+        selectedDayBarEl.style.width = info.percent + "%";
+
+        badgesHtml += '<span class="detail-badge">สำเร็จ ' + info.percent + '%</span>';
+        badgesHtml += '<span class="detail-badge">ทำแล้ว ' + info.doneCount + '/' + info.total + ' งาน</span>';
+        badgesHtml += '<span class="detail-badge">' + DAYS[dateObj.getDay()] + '</span>';
+        selectedDateBadgesEl.innerHTML = badgesHtml;
+
+        for (i = 0; i < tasks.length; i++) {
+          var task = tasks[i];
+          var done = !!info.tasks[task.id];
+          tasksHtml += '' +
+            '<div class="detail-task' + (done ? " done" : "") + '">' +
+              '<div class="mark">' + (done ? "✓" : "•") + '</div>' +
+              '<div>' +
+                '<strong>' + escapeHtml(task.title) + '</strong>' +
+                '<span>' + task.start + " - " + task.end + " • " + escapeHtml(task.detail) + '</span>' +
+              '</div>' +
+            '</div>';
+        }
+
+        selectedTaskListEl.innerHTML = tasksHtml;
+      }
+
+      function getCompletionInfo(dayKey) {
+        var dayState = state[dayKey] && state[dayKey].tasks ? state[dayKey].tasks : {};
+        var doneCount = Object.keys(dayState).length;
+        var total = tasks.length;
+        var percent = Math.round((doneCount / total) * 100);
+
+        return {
+          key: dayKey,
+          tasks: dayState,
+          doneCount: doneCount,
+          total: total,
+          percent: percent,
+          statusClass: getPercentClass(percent)
+        };
+      }
+
+      function getMonthStats(year, month) {
+        var prefix = year + "-" + pad(month + 1);
+        var keys = Object.keys(state).filter(function (key) {
+          return key.indexOf(prefix) === 0;
+        }).sort();
+
+        if (!keys.length) {
+          return {
+            average: 0,
+            daysTracked: 0,
+            bestText: "ยังไม่มีข้อมูล"
+          };
+        }
+
+        var totalPercent = 0;
+        var bestPercent = 0;
+        var bestKey = keys[0];
+        var i;
+
+        for (i = 0; i < keys.length; i++) {
+          var info = getCompletionInfo(keys[i]);
+          totalPercent += info.percent;
+          if (info.percent >= bestPercent) {
+            bestPercent = info.percent;
+            bestKey = keys[i];
+          }
+        }
+
+        return {
+          average: Math.round(totalPercent / keys.length),
+          daysTracked: keys.length,
+          bestText: formatDateKey(bestKey) + " (" + bestPercent + "%)"
+        };
+      }
+
+      function getCutoffCompletionForMonth(year, month) {
+        var prefix = year + "-" + pad(month + 1);
+        var keys = Object.keys(state).filter(function (key) {
+          return key.indexOf(prefix) === 0;
+        });
+        var cutoffIds = ["morning-ship", "afternoon-ship"];
+
+        if (!keys.length) {
+          return { average: 0 };
+        }
+
+        var total = 0;
+        var i;
+        var j;
+
+        for (i = 0; i < keys.length; i++) {
+          var dayTasks = state[keys[i]] && state[keys[i]].tasks ? state[keys[i]].tasks : {};
+          var done = 0;
+          for (j = 0; j < cutoffIds.length; j++) {
+            if (dayTasks[cutoffIds[j]]) {
+              done += 1;
+            }
+          }
+          total += Math.round((done / cutoffIds.length) * 100);
+        }
+
+        return {
+          average: Math.round(total / keys.length)
+        };
+      }
+
+      function getRecentTrackedDays(limit) {
+        var keys = Object.keys(state).filter(function (key) {
+          return state[key] && state[key].tasks && Object.keys(state[key].tasks).length > 0;
+        }).sort().reverse();
+
+        var result = [];
+        var i;
+
+        for (i = 0; i < keys.length && i < limit; i++) {
+          result.push(getCompletionInfo(keys[i]));
+        }
+
+        return result;
+      }
+
+      function onTabClick() {
+        switchTab(this.getAttribute("data-tab"));
+      }
+
+      function switchTab(tabName) {
+        var tabs = document.querySelectorAll("[data-tab]");
+        var views = document.querySelectorAll("[data-view]");
+        var i;
+
+        activeTab = tabName;
+
+        for (i = 0; i < tabs.length; i++) {
+          var active = tabs[i].getAttribute("data-tab") === tabName;
+          tabs[i].classList.toggle("active", active);
+          tabs[i].setAttribute("aria-selected", active ? "true" : "false");
+        }
+
+        for (i = 0; i < views.length; i++) {
+          views[i].classList.toggle("active", views[i].getAttribute("data-view") === tabName);
+        }
+      }
+
+      function moveCalendar(step) {
+        var month = calendarCursor.month + step;
+        var year = calendarCursor.year;
+
+        if (month < 0) {
+          month = 11;
+          year -= 1;
+        } else if (month > 11) {
+          month = 0;
+          year += 1;
+        }
+
+        calendarCursor.year = year;
+        calendarCursor.month = month;
+        selectedDayKey = getDayKey(new Date(year, month, 1));
+        renderCalendar();
+        renderSelectedDay();
+      }
+
+      function syncCalendarCursorToSelectedDay() {
+        var parts = selectedDayKey.split("-");
+        calendarCursor.year = Number(parts[0]);
+        calendarCursor.month = Number(parts[1]) - 1;
+      }
+
+      function runAlertChecks(now) {
+        if (!alertState.enabled) {
+          return;
+        }
+
+        var minuteKey = getDayKey(now) + "T" + pad(now.getHours()) + ":" + pad(now.getMinutes());
+        if (alertState.lastMinuteKey === minuteKey) {
+          return;
+        }
+
+        alertState.lastMinuteKey = minuteKey;
+        saveAlertState();
+
+        var currentHHMM = pad(now.getHours()) + ":" + pad(now.getMinutes());
+        var i;
+
+        for (i = 0; i < tasks.length; i++) {
+          if (tasks[i].start === currentHHMM) {
+            ensureAudioReady();
+            beep(tasks[i].cutoff ? 4 : 2);
+            showToast("เริ่มกิจกรรมใหม่: " + tasks[i].title);
+          }
+        }
+
+        if (currentHHMM === "10:00") {
+          ensureAudioReady();
+          beep(5);
+          showToast("ถึงเวลาตัดรอบขนส่ง 10:00 แล้ว");
+        }
+
+        if (currentHHMM === "14:00") {
+          ensureAudioReady();
+          beep(5);
+          showToast("ถึงเวลาตัดรอบขนส่ง 14:00 แล้ว");
+        }
+      }
+
+      function syncAlertUI() {
+        if (alertState.enabled) {
+          alertStatusEl.innerHTML = '' +
+            '<strong>เปิดเสียงแจ้งเตือนแล้ว</strong>' +
+            '<p>เตือนงานใหม่อัตโนมัติ และเน้นช่วง 10:00 กับ 14:00</p>';
+          enableAlertBtn.textContent = "เปิดเสียงแล้ว";
+        } else {
+          alertStatusEl.innerHTML = '' +
+            '<strong>ยังไม่ได้เปิดเสียงแจ้งเตือน</strong>' +
+            '<p>แตะเปิดเสียง 1 ครั้ง เพื่อให้เว็บเล่นเสียงเตือนได้</p>';
+          enableAlertBtn.textContent = "เปิดเสียงแจ้งเตือน";
+        }
+      }
+
+      function ensureAudioReady() {
+        if (!window.AudioContext && !window.webkitAudioContext) {
+          return;
+        }
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      }
+
+      function beep(times) {
+        if (!audioCtx) {
+          return;
+        }
+
+        var start = audioCtx.currentTime;
+        var count = times || 1;
+        var i;
+
+        for (i = 0; i < count; i++) {
+          var oscillator = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+
+          oscillator.type = "square";
+          oscillator.frequency.value = i % 2 === 0 ? 960 : 1240;
+          gain.gain.setValueAtTime(0.001, start + i * 0.22);
+          gain.gain.exponentialRampToValueAtTime(0.08, start + i * 0.22 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + i * 0.22 + 0.14);
+
+          oscillator.connect(gain);
+          gain.connect(audioCtx.destination);
+          oscillator.start(start + i * 0.22);
+          oscillator.stop(start + i * 0.22 + 0.16);
+        }
+      }
+
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toastEl.classList.remove("show");
+        }, 2400);
+      }
+
+      function loadState() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            return JSON.parse(raw);
+          }
+
+          var legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (legacyRaw) {
+            var parsed = JSON.parse(legacyRaw);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+            return parsed;
+          }
+        } catch (error) {
+        }
+        return {};
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function loadAlertState() {
+        try {
+          var raw = localStorage.getItem(ALERT_KEY);
+          return raw ? JSON.parse(raw) : { enabled: false, lastMinuteKey: "" };
+        } catch (error) {
+          return { enabled: false, lastMinuteKey: "" };
+        }
+      }
+
+      function saveAlertState() {
+        localStorage.setItem(ALERT_KEY, JSON.stringify(alertState));
+      }
+
+      function getDayState(dayKey, createIfMissing) {
+        if (!state[dayKey] && createIfMissing) {
+          state[dayKey] = { tasks: {}, updatedAt: new Date().toISOString() };
+          saveState();
+        }
+        return state[dayKey] || { tasks: {} };
+      }
+
+      function getDayKey(date) {
+        return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+      }
+
+      function formatDateKey(key) {
+        var parts = key.split("-");
+        return Number(parts[2]) + " " + MONTHS[Number(parts[1]) - 1] + " " + (Number(parts[0]) + 543);
+      }
+
+      function pad(value) {
+        return value < 10 ? "0" + value : String(value);
+      }
+
+      function timeToMinutes(value) {
+        var parts = value.split(":");
+        return Number(parts[0]) * 60 + Number(parts[1]);
+      }
+
+      function getPercentClass(percent) {
+        if (percent >= 70) {
+          return "good";
+        }
+        if (percent >= 30) {
+          return "warn";
+        }
+        return "bad";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+    })();
+  </script>
+</body>
+</html>
