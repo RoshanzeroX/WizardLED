@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#08111f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>ตารางงานสวิชสัมผัส</title>
   <style>
     :root {
@@ -697,12 +700,13 @@
 
     .detail-task {
       display: grid;
-      grid-template-columns: 18px 1fr;
+      grid-template-columns: 20px 1fr;
       gap: 10px;
       padding: 10px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid rgba(255, 255, 255, 0.05);
+      align-items: start;
     }
 
     .detail-task.done {
@@ -710,22 +714,30 @@
       background: rgba(45, 204, 139, 0.08);
     }
 
-    .detail-task .mark {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--muted);
+    .detail-task.disabled {
+      opacity: 0.58;
     }
 
-    .detail-task.done .mark {
-      background: var(--good);
-      color: #04100c;
+    .detail-check {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+    }
+
+    .detail-check input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      margin: 0;
+    }
+
+    .detail-check .check-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 7px;
+      font-size: 0.7rem;
+      box-shadow: none;
     }
 
     .detail-task strong {
@@ -960,14 +972,14 @@
                   <h2>ปุ่มลัด</h2>
                   <details class="info-pop">
                     <summary class="info-trigger" aria-label="คำอธิบายปุ่มลัด">i</summary>
-                    <div class="info-panel">รวมปุ่มที่ใช้บ่อยไว้ด้านบนเพื่อให้แตะได้ไวบนมือถือ เช่น เปิดเสียง ทดสอบเสียง คัดลอกเวลาสำคัญ และล้างเช็กลิสต์ของวันนี้</div>
+                    <div class="info-panel">รวมปุ่มที่ใช้บ่อยไว้ด้านบนเพื่อให้แตะได้ไวบนมือถือ เช่น เต็มจอ เปิดเสียง จบวัน และล้างเช็กลิสต์ของวันนี้</div>
                   </details>
                 </div>
               </div>
               <div class="action-grid">
-                <button class="action-btn primary" id="enableAlertBtn" type="button">เปิดเสียง</button>
-                <button class="action-btn" id="beepTestBtn" type="button">ทดสอบปี๊ป</button>
-                <button class="action-btn" id="exportHintBtn" type="button">คัดลอกเวลา</button>
+                <button class="action-btn primary" id="fullscreenBtn" type="button">เต็มจอ</button>
+                <button class="action-btn" id="enableAlertBtn" type="button">เปิดเสียง</button>
+                <button class="action-btn" id="finishDayBtn" type="button">จบวัน</button>
                 <button class="action-btn" id="resetTodayBtn" type="button">ล้างวันนี้</button>
               </div>
               <div class="alert-box" id="alertStatus">
@@ -1103,6 +1115,23 @@
               </div>
               <div class="recent-list" id="recentDaysList"></div>
             </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="title-row">
+                  <h2>Export และ Backup</h2>
+                  <details class="info-pop">
+                    <summary class="info-trigger" aria-label="คำอธิบายสำรองข้อมูล">i</summary>
+                    <div class="info-panel">ดาวน์โหลดไฟล์สำรองเก็บไว้ในเครื่องได้ และนำไฟล์เดิมกลับมา import เพื่อกู้ข้อมูลย้อนหลังทั้งหมดได้</div>
+                  </details>
+                </div>
+              </div>
+              <div class="action-grid">
+                <button class="action-btn" id="exportBackupBtn" type="button">Export ข้อมูล</button>
+                <button class="action-btn" id="importBackupBtn" type="button">Import ข้อมูล</button>
+              </div>
+              <input id="backupFileInput" type="file" accept="application/json,.json" hidden>
+            </div>
           </div>
         </section>
       </div>
@@ -1170,10 +1199,13 @@
       var selectedDateBadgesEl = document.getElementById("selectedDateBadges");
       var selectedDayBarEl = document.getElementById("selectedDayBar");
       var selectedTaskListEl = document.getElementById("selectedTaskList");
+      var fullscreenBtn = document.getElementById("fullscreenBtn");
       var enableAlertBtn = document.getElementById("enableAlertBtn");
-      var beepTestBtn = document.getElementById("beepTestBtn");
-      var exportHintBtn = document.getElementById("exportHintBtn");
+      var finishDayBtn = document.getElementById("finishDayBtn");
       var resetTodayBtn = document.getElementById("resetTodayBtn");
+      var exportBackupBtn = document.getElementById("exportBackupBtn");
+      var importBackupBtn = document.getElementById("importBackupBtn");
+      var backupFileInput = document.getElementById("backupFileInput");
       var prevMonthBtn = document.getElementById("prevMonthBtn");
       var nextMonthBtn = document.getElementById("nextMonthBtn");
       var toastEl = document.getElementById("toast");
@@ -1181,6 +1213,7 @@
       bindEvents();
       renderAll();
       syncAlertUI();
+      syncFullscreenUI();
       runAlertChecks(new Date());
 
       setInterval(function () {
@@ -1208,50 +1241,40 @@
           tabs[i].addEventListener("click", onTabClick);
         }
 
+        fullscreenBtn.addEventListener("click", toggleFullscreen);
         enableAlertBtn.addEventListener("click", function () {
           ensureAudioReady();
-          alertState.enabled = true;
-          saveAlertState();
-          syncAlertUI();
-          beep(2);
-          showToast("เปิดเสียงแจ้งเตือนแล้ว");
-        });
-
-        beepTestBtn.addEventListener("click", function () {
-          ensureAudioReady();
-          beep(3);
-          showToast("ทดสอบเสียงปี๊ปเรียบร้อย");
-        });
-
-        exportHintBtn.addEventListener("click", function () {
-          var message = [
-            "เวลาสำคัญสำหรับตั้งปลุกในแอปนาฬิกา",
-            "- 09:25 เตรียมส่งรอบเช้า",
-            "- 10:00 ตัดรอบส่งเช้า",
-            "- 13:25 เตรียมส่งรอบบ่าย",
-            "- 14:00 ตัดรอบส่งบ่าย"
-          ].join("\n");
-
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(message).then(function () {
-              showToast("คัดลอกเวลาสำคัญแล้ว");
-            }).catch(function () {
-              window.alert(message);
-            });
+          if (!alertState.enabled) {
+            alertState.enabled = true;
+            saveAlertState();
+            syncAlertUI();
+            beep(2);
+            showToast("เปิดเสียงแจ้งเตือนแล้ว");
           } else {
-            window.alert(message);
+            beep(2);
+            showToast("ทดสอบเสียงเรียบร้อย");
           }
+        });
+
+        finishDayBtn.addEventListener("click", function () {
+          closeDay(currentDayKey);
         });
 
         resetTodayBtn.addEventListener("click", function () {
           if (!window.confirm("ต้องการล้างเช็กลิสต์ของวันนี้ใช่ไหม")) {
             return;
           }
-          state[currentDayKey] = { tasks: {}, updatedAt: new Date().toISOString() };
+          state[currentDayKey] = { tasks: {}, updatedAt: new Date().toISOString(), closedAt: null };
           saveState();
           renderAll();
           showToast("ล้างเช็กลิสต์วันนี้แล้ว");
         });
+
+        exportBackupBtn.addEventListener("click", exportBackup);
+        importBackupBtn.addEventListener("click", function () {
+          backupFileInput.click();
+        });
+        backupFileInput.addEventListener("change", importBackup);
 
         prevMonthBtn.addEventListener("click", function () {
           moveCalendar(-1);
@@ -1260,6 +1283,8 @@
         nextMonthBtn.addEventListener("click", function () {
           moveCalendar(1);
         });
+
+        document.addEventListener("fullscreenchange", syncFullscreenUI);
       }
 
       function renderAll() {
@@ -1360,13 +1385,17 @@
         var monthInfo = getMonthStats(now.getFullYear(), now.getMonth());
         var recentItems = getRecentTrackedDays(6);
         var cutoffInfo = getCutoffCompletionForMonth(now.getFullYear(), now.getMonth());
+        var todayClosed = !!todayInfo.closedAt;
 
         heroPercentEl.textContent = todayInfo.percent + "%";
         doneCountEl.textContent = todayInfo.doneCount + "/" + todayInfo.total;
         monthlyPercentEl.textContent = monthInfo.average + "%";
         todayPercentTextEl.textContent = todayInfo.percent + "%";
         dayProgressBarEl.style.width = todayInfo.percent + "%";
-        todaySummaryEl.textContent = todayInfo.doneCount + "/" + todayInfo.total + " งานวันนี้";
+        todaySummaryEl.textContent = todayInfo.doneCount + "/" + todayInfo.total + " งานวันนี้" + (todayClosed ? " • จบวันแล้ว" : "");
+        finishDayBtn.textContent = todayClosed ? "จบวันแล้ว" : "จบวัน";
+        finishDayBtn.disabled = todayClosed;
+        finishDayBtn.style.opacity = todayClosed ? "0.7" : "1";
 
         summaryTodayPercentEl.textContent = todayInfo.percent + "%";
         summaryMonthAverageEl.textContent = monthInfo.average + "%";
@@ -1468,48 +1497,69 @@
         var dateParts = selectedDayKey.split("-");
         var dateObj = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
         var future = selectedDayKey > currentDayKey;
+        var editable = !future;
         var badgesHtml = "";
         var tasksHtml = "";
         var i;
 
         selectedDateTitleEl.textContent = "รายละเอียด " + formatDateKey(selectedDayKey);
-        selectedDateHintEl.textContent = future ? "วันในอนาคต แสดงตามตารางที่วางไว้" : "ดูย้อนหลังว่าวันนั้นทำอะไรเสร็จแล้วบ้าง";
+        if (future) {
+          selectedDateHintEl.textContent = "วันในอนาคต แสดงตามตารางที่วางไว้ ยังแก้ไขไม่ได้";
+        } else if (selectedDayKey === currentDayKey) {
+          selectedDateHintEl.textContent = info.closedAt ? "วันนี้จบวันแล้ว แต่ยังกลับมาแก้เช็กลิสต์ได้" : "วันนี้ยังแก้เช็กลิสต์ได้ตามปกติ";
+        } else {
+          selectedDateHintEl.textContent = info.closedAt ? "วันเก่าถูกจบวันแล้ว แต่ยังแก้ย้อนหลังได้" : "วันเก่านี้ยังเปิดแก้ย้อนหลังได้";
+        }
         selectedDayBarEl.style.width = info.percent + "%";
 
         badgesHtml += '<span class="detail-badge">สำเร็จ ' + info.percent + '%</span>';
         badgesHtml += '<span class="detail-badge">ทำแล้ว ' + info.doneCount + '/' + info.total + ' งาน</span>';
         badgesHtml += '<span class="detail-badge">' + DAYS[dateObj.getDay()] + '</span>';
+        badgesHtml += '<span class="detail-badge">' + (info.closedAt ? "จบวันแล้ว" : "ยังไม่จบวัน") + '</span>';
         selectedDateBadgesEl.innerHTML = badgesHtml;
 
         for (i = 0; i < tasks.length; i++) {
           var task = tasks[i];
           var done = !!info.tasks[task.id];
           tasksHtml += '' +
-            '<div class="detail-task' + (done ? " done" : "") + '">' +
-              '<div class="mark">' + (done ? "✓" : "•") + '</div>' +
+            '<label class="detail-task' + (done ? " done" : "") + (editable ? "" : " disabled") + '">' +
+              '<span class="detail-check">' +
+                '<input type="checkbox" data-history-day-key="' + selectedDayKey + '" data-history-task-id="' + task.id + '"' + (done ? " checked" : "") + (editable ? "" : " disabled") + '>' +
+                '<span class="check-box">' + (done ? "✓" : "") + '</span>' +
+              '</span>' +
               '<div>' +
                 '<strong>' + escapeHtml(task.title) + '</strong>' +
                 '<span>' + task.start + " - " + task.end + " • " + escapeHtml(task.detail) + '</span>' +
               '</div>' +
-            '</div>';
+            '</label>';
         }
 
         selectedTaskListEl.innerHTML = tasksHtml;
+
+        if (editable) {
+          var inputs = selectedTaskListEl.querySelectorAll("input[type='checkbox']");
+          for (i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener("change", onHistoryTaskToggle);
+          }
+        }
       }
 
       function getCompletionInfo(dayKey) {
-        var dayState = state[dayKey] && state[dayKey].tasks ? state[dayKey].tasks : {};
-        var doneCount = Object.keys(dayState).length;
+        var dayEntry = getDayState(dayKey, false);
+        var dayTasks = dayEntry.tasks || {};
+        var doneCount = Object.keys(dayTasks).length;
         var total = tasks.length;
         var percent = Math.round((doneCount / total) * 100);
 
         return {
           key: dayKey,
-          tasks: dayState,
+          tasks: dayTasks,
           doneCount: doneCount,
           total: total,
           percent: percent,
-          statusClass: getPercentClass(percent)
+          statusClass: getPercentClass(percent),
+          closedAt: dayEntry.closedAt || null,
+          updatedAt: dayEntry.updatedAt || null
         };
       }
 
@@ -1683,13 +1733,142 @@
           alertStatusEl.innerHTML = '' +
             '<strong>เปิดเสียงแจ้งเตือนแล้ว</strong>' +
             '<p>เตือนงานใหม่อัตโนมัติ และเน้นช่วง 10:00 กับ 14:00</p>';
-          enableAlertBtn.textContent = "เปิดเสียงแล้ว";
+          enableAlertBtn.textContent = "ทดสอบเสียง";
         } else {
           alertStatusEl.innerHTML = '' +
             '<strong>ยังไม่ได้เปิดเสียงแจ้งเตือน</strong>' +
             '<p>แตะเปิดเสียง 1 ครั้ง เพื่อให้เว็บเล่นเสียงเตือนได้</p>';
-          enableAlertBtn.textContent = "เปิดเสียงแจ้งเตือน";
+          enableAlertBtn.textContent = "เปิดเสียง";
         }
+      }
+
+      function syncFullscreenUI() {
+        fullscreenBtn.textContent = isFullscreenActive() ? "ออกเต็มจอ" : "เต็มจอ";
+      }
+
+      function toggleFullscreen() {
+        var docEl = document.documentElement;
+        if (!docEl.requestFullscreen) {
+          showToast("เครื่องนี้ไม่รองรับเต็มจออัตโนมัติ ลองเพิ่มหน้าเว็บไว้ที่หน้าจอหลัก");
+          return;
+        }
+
+        if (isFullscreenActive()) {
+          document.exitFullscreen();
+        } else {
+          docEl.requestFullscreen().catch(function () {
+            showToast("เปิดเต็มจอไม่สำเร็จ ลองกดใหม่อีกครั้ง");
+          });
+        }
+      }
+
+      function isFullscreenActive() {
+        return !!document.fullscreenElement;
+      }
+
+      function closeDay(dayKey) {
+        var dayState = getDayState(dayKey, true);
+        if (dayState.closedAt) {
+          showToast("วันนี้ถูกจบวันไว้แล้ว");
+          return;
+        }
+
+        dayState.closedAt = new Date().toISOString();
+        dayState.updatedAt = dayState.closedAt;
+        saveState();
+        renderAll();
+        showToast("จบวันแล้ว ย้อนกลับมาแก้วันเก่าได้จากปฏิทิน");
+      }
+
+      function onHistoryTaskToggle(event) {
+        var input = event.target;
+        var dayKey = input.getAttribute("data-history-day-key");
+        var taskId = input.getAttribute("data-history-task-id");
+        var dayState;
+
+        if (dayKey > currentDayKey) {
+          showToast("ยังแก้วันในอนาคตไม่ได้");
+          renderSelectedDay();
+          return;
+        }
+
+        dayState = getDayState(dayKey, true);
+        if (input.checked) {
+          dayState.tasks[taskId] = true;
+        } else {
+          delete dayState.tasks[taskId];
+        }
+        dayState.updatedAt = new Date().toISOString();
+        saveState();
+
+        if (dayKey === currentDayKey) {
+          renderTasks();
+        }
+        updateSummary();
+        renderCalendar();
+        renderSelectedDay();
+      }
+
+      function exportBackup() {
+        var payload = {
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          state: state,
+          alertState: alertState
+        };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+
+        link.href = url;
+        link.download = "wizardled-backup-" + currentDayKey + ".json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast("Export backup ลงเครื่องแล้ว");
+      }
+
+      function importBackup(event) {
+        var file = event.target.files && event.target.files[0];
+        var reader;
+
+        if (!file) {
+          return;
+        }
+
+        reader = new FileReader();
+        reader.onload = function () {
+          var parsed;
+          var importedState;
+
+          try {
+            parsed = JSON.parse(reader.result);
+            importedState = parsed.state ? parsed.state : parsed;
+            importedState = normalizeState(importedState);
+          } catch (error) {
+            showToast("ไฟล์ backup ไม่ถูกต้อง");
+            backupFileInput.value = "";
+            return;
+          }
+
+          if (!window.confirm("ต้องการนำเข้า backup และแทนที่ข้อมูลในเครื่องตอนนี้ใช่ไหม")) {
+            backupFileInput.value = "";
+            return;
+          }
+
+          state = importedState;
+          if (parsed.alertState) {
+            alertState = normalizeAlertState(parsed.alertState);
+            saveAlertState();
+            syncAlertUI();
+          }
+          saveState();
+          renderAll();
+          showToast("Import backup สำเร็จ");
+          backupFileInput.value = "";
+        };
+        reader.readAsText(file, "utf-8");
       }
 
       function ensureAudioReady() {
@@ -1743,12 +1922,12 @@
         try {
           var raw = localStorage.getItem(STORAGE_KEY);
           if (raw) {
-            return JSON.parse(raw);
+            return normalizeState(JSON.parse(raw));
           }
 
           var legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
           if (legacyRaw) {
-            var parsed = JSON.parse(legacyRaw);
+            var parsed = normalizeState(JSON.parse(legacyRaw));
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
             return parsed;
           }
@@ -1764,7 +1943,7 @@
       function loadAlertState() {
         try {
           var raw = localStorage.getItem(ALERT_KEY);
-          return raw ? JSON.parse(raw) : { enabled: false, lastMinuteKey: "" };
+          return raw ? normalizeAlertState(JSON.parse(raw)) : { enabled: false, lastMinuteKey: "" };
         } catch (error) {
           return { enabled: false, lastMinuteKey: "" };
         }
@@ -1776,10 +1955,41 @@
 
       function getDayState(dayKey, createIfMissing) {
         if (!state[dayKey] && createIfMissing) {
-          state[dayKey] = { tasks: {}, updatedAt: new Date().toISOString() };
+          state[dayKey] = { tasks: {}, updatedAt: new Date().toISOString(), closedAt: null };
           saveState();
         }
-        return state[dayKey] || { tasks: {} };
+        return state[dayKey] || { tasks: {}, updatedAt: null, closedAt: null };
+      }
+
+      function normalizeState(rawState) {
+        var normalized = {};
+        var keys;
+        var i;
+        var key;
+        var entry;
+
+        if (!rawState || typeof rawState !== "object") {
+          return {};
+        }
+
+        keys = Object.keys(rawState);
+        for (i = 0; i < keys.length; i++) {
+          key = keys[i];
+          entry = rawState[key] || {};
+          normalized[key] = {
+            tasks: entry.tasks && typeof entry.tasks === "object" ? entry.tasks : {},
+            updatedAt: entry.updatedAt || null,
+            closedAt: entry.closedAt || null
+          };
+        }
+        return normalized;
+      }
+
+      function normalizeAlertState(rawAlertState) {
+        return {
+          enabled: !!(rawAlertState && rawAlertState.enabled),
+          lastMinuteKey: rawAlertState && rawAlertState.lastMinuteKey ? rawAlertState.lastMinuteKey : ""
+        };
       }
 
       function getDayKey(date) {
