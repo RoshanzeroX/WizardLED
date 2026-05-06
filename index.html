@@ -256,6 +256,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 8px;
     }
@@ -536,6 +537,44 @@
       font-size: 0.72rem;
     }
 
+    .card-tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+    }
+
+    .mini-btn {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .mini-btn:active {
+      transform: scale(0.98);
+    }
+
+    .task-edit-btn,
+    .detail-edit-btn {
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.66rem;
+      font-weight: 700;
+      flex: none;
+    }
+
+    .task-edit-btn:active,
+    .detail-edit-btn:active {
+      transform: scale(0.97);
+    }
+
     .calendar-toolbar {
       display: grid;
       grid-template-columns: 42px 1fr 42px;
@@ -747,11 +786,254 @@
       margin-bottom: 2px;
     }
 
+    .detail-task-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
     .detail-task span {
       display: block;
       font-size: 0.78rem;
       color: var(--muted);
       line-height: 1.4;
+    }
+
+    .sheet-root {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.56);
+      border: 0;
+      padding: 0;
+    }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: min(100%, 560px);
+      margin: 0 auto;
+      border-radius: 28px 28px 0 0;
+      padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+      background: rgba(9, 16, 30, 0.98);
+      border-bottom: 0;
+      max-height: calc(100dvh - 10px);
+      overflow-y: auto;
+      animation: sheetUp 220ms ease;
+    }
+
+    .sheet-grab {
+      width: 46px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      margin: 0 auto 10px;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sheet-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .sheet-kicker {
+      margin-bottom: 4px;
+    }
+
+    .sheet-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field span,
+    .picker-head {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px;
+      font: inherit;
+      outline: none;
+    }
+
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: rgba(156, 169, 191, 0.8);
+    }
+
+    .field-textarea {
+      resize: vertical;
+      min-height: 76px;
+    }
+
+    .field-input:focus,
+    .field-textarea:focus {
+      border-color: rgba(76, 224, 179, 0.45);
+      box-shadow: 0 0 0 3px rgba(76, 224, 179, 0.12);
+    }
+
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .chip-toggle {
+      position: relative;
+      display: block;
+    }
+
+    .chip-toggle input {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+      margin: 0;
+    }
+
+    .chip-toggle span {
+      display: block;
+      padding: 11px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .chip-toggle input:checked + span {
+      border-color: rgba(76, 224, 179, 0.35);
+      background: rgba(76, 224, 179, 0.12);
+      color: var(--text);
+    }
+
+    .picker-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .picker-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .wheel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .wheel-col {
+      display: grid;
+      gap: 6px;
+    }
+
+    .wheel-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .wheel {
+      position: relative;
+      height: 188px;
+      overflow-y: auto;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 74px 0;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .wheel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wheel::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 74px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .wheel-list {
+      position: relative;
+    }
+
+    .wheel-item {
+      height: 40px;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 700;
+      scroll-snap-align: start;
+      transition: color 120ms ease, transform 120ms ease;
+      user-select: none;
+    }
+
+    .wheel-item.selected {
+      color: var(--text);
+      transform: scale(1.03);
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    @keyframes sheetUp {
+      from {
+        transform: translateY(24px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .stats-grid {
@@ -997,6 +1279,9 @@
                     <div class="info-panel">แตะช่องสี่เหลี่ยมเพื่อบันทึกว่างานเสร็จแล้ว รายการที่มีป้ายสีเหลืองคือช่วงตัดรอบขนส่ง ส่วนรายละเอียดแต่ละงานกดปุ่ม i ในแถวนั้นได้</div>
                   </details>
                 </div>
+                <div class="card-tools">
+                  <button class="mini-btn" id="addTodayTaskBtn" type="button">+ เพิ่มงาน</button>
+                </div>
               </div>
               <div class="timeline" id="taskList"></div>
             </div>
@@ -1041,6 +1326,9 @@
               <div class="card-head">
                 <div class="title-row">
                   <h2 id="selectedDateTitle">รายละเอียดรายวัน</h2>
+                </div>
+                <div class="card-tools">
+                  <button class="mini-btn" id="addSelectedTaskBtn" type="button">+ เพิ่มงาน</button>
                 </div>
               </div>
               <div class="day-detail">
@@ -1138,6 +1426,73 @@
     </section>
   </main>
 
+  <div class="sheet-root" id="editorSheet" hidden>
+    <button class="sheet-backdrop" id="sheetBackdrop" type="button" aria-label="ปิดตัวแก้ไขตาราง"></button>
+    <section class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+      <div class="sheet-grab"></div>
+      <div class="sheet-head">
+        <div>
+          <p class="eyebrow sheet-kicker" id="editorDateLabel">แก้ตารางรายวัน</p>
+          <h2 id="editorTitle">เพิ่มงาน</h2>
+        </div>
+        <button class="mini-btn" id="closeEditorBtn" type="button">ปิด</button>
+      </div>
+      <div class="sheet-body">
+        <label class="field">
+          <span>งานที่ต้องทำ</span>
+          <input class="field-input" id="editorTitleInput" type="text" maxlength="80" placeholder="เช่น แพ็คของด่วน">
+        </label>
+        <label class="field">
+          <span>หมายเหตุสั้น ๆ</span>
+          <textarea class="field-textarea" id="editorNoteInput" rows="2" placeholder="ใส่รายละเอียดเพิ่มเติมได้"></textarea>
+        </label>
+        <div class="toggle-grid">
+          <label class="chip-toggle">
+            <input id="editorImportantInput" type="checkbox">
+            <span>งานสำคัญ</span>
+          </label>
+          <label class="chip-toggle">
+            <input id="editorCutoffInput" type="checkbox">
+            <span>ตัดรอบ</span>
+          </label>
+        </div>
+        <div class="picker-stack">
+          <div class="picker-block">
+            <div class="picker-head">เวลาเริ่ม</div>
+            <div class="wheel-grid">
+              <div class="wheel-col">
+                <span class="wheel-label">ชั่วโมง</span>
+                <div class="wheel" id="startHourWheel" data-wheel="startHour"></div>
+              </div>
+              <div class="wheel-col">
+                <span class="wheel-label">นาที</span>
+                <div class="wheel" id="startMinuteWheel" data-wheel="startMinute"></div>
+              </div>
+            </div>
+          </div>
+          <div class="picker-block">
+            <div class="picker-head">ระยะเวลา</div>
+            <div class="wheel-grid">
+              <div class="wheel-col">
+                <span class="wheel-label">ชั่วโมง</span>
+                <div class="wheel" id="durationHourWheel" data-wheel="durationHour"></div>
+              </div>
+              <div class="wheel-col">
+                <span class="wheel-label">นาที</span>
+                <div class="wheel" id="durationMinuteWheel" data-wheel="durationMinute"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note" id="editorPreviewText">กำลังเตรียมเวลา...</p>
+      </div>
+      <div class="sheet-actions">
+        <button class="action-btn" id="deleteTaskBtn" type="button">ลบงาน</button>
+        <button class="action-btn primary" id="saveTaskBtn" type="button">บันทึกงาน</button>
+      </div>
+    </section>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -1150,7 +1505,7 @@
         "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
         "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
       ];
-      var tasks = [
+      var DEFAULT_SCHEDULE = [
         { id: "morning-pack", start: "07:00", end: "09:30", title: "แพ็คของรอบเช้า", detail: "สำคัญมาก ต้องเตรียมของให้พร้อมก่อนตัดรอบ", critical: true },
         { id: "morning-ship", start: "09:30", end: "10:00", title: "ออกไปส่งของรอบเช้า", detail: "ตัดรอบ 10:00", cutoff: true, critical: true },
         { id: "reply-breakfast", start: "10:00", end: "11:30", title: "ตอบแชทลูกค้า & ทานข้าวเช้า", detail: "เคลียร์แชทและเช็กออเดอร์ใหม่" },
@@ -1162,6 +1517,17 @@
         { id: "dinner", start: "19:00", end: "20:30", title: "พักผ่อน & ทานข้าวเย็น", detail: "พักให้พอเพื่อทำงานต่อ" },
         { id: "assemble-qc", start: "20:30", end: "22:00", title: "ประกอบสวิช & QC เตรียมของวันพรุ่งนี้", detail: "ตรวจคุณภาพและจัดคิววันถัดไป", critical: true }
       ];
+      var WHEEL_ITEM_HEIGHT = 40;
+      var TIME_MINUTE_OPTIONS = buildRange(0, 55, 5);
+      var HOUR_OPTIONS = buildRange(0, 23, 1);
+      var DURATION_HOUR_OPTIONS = buildRange(0, 12, 1);
+      var editorState = {
+        open: false,
+        dayKey: "",
+        taskId: "",
+        isNew: true,
+        values: null
+      };
 
       var state = loadState();
       var alertState = loadAlertState();
@@ -1199,6 +1565,8 @@
       var selectedDateBadgesEl = document.getElementById("selectedDateBadges");
       var selectedDayBarEl = document.getElementById("selectedDayBar");
       var selectedTaskListEl = document.getElementById("selectedTaskList");
+      var addTodayTaskBtn = document.getElementById("addTodayTaskBtn");
+      var addSelectedTaskBtn = document.getElementById("addSelectedTaskBtn");
       var fullscreenBtn = document.getElementById("fullscreenBtn");
       var enableAlertBtn = document.getElementById("enableAlertBtn");
       var finishDayBtn = document.getElementById("finishDayBtn");
@@ -1208,6 +1576,18 @@
       var backupFileInput = document.getElementById("backupFileInput");
       var prevMonthBtn = document.getElementById("prevMonthBtn");
       var nextMonthBtn = document.getElementById("nextMonthBtn");
+      var editorSheetEl = document.getElementById("editorSheet");
+      var sheetBackdropEl = document.getElementById("sheetBackdrop");
+      var closeEditorBtn = document.getElementById("closeEditorBtn");
+      var editorDateLabelEl = document.getElementById("editorDateLabel");
+      var editorTitleEl = document.getElementById("editorTitle");
+      var editorTitleInput = document.getElementById("editorTitleInput");
+      var editorNoteInput = document.getElementById("editorNoteInput");
+      var editorImportantInput = document.getElementById("editorImportantInput");
+      var editorCutoffInput = document.getElementById("editorCutoffInput");
+      var editorPreviewText = document.getElementById("editorPreviewText");
+      var deleteTaskBtn = document.getElementById("deleteTaskBtn");
+      var saveTaskBtn = document.getElementById("saveTaskBtn");
       var toastEl = document.getElementById("toast");
 
       bindEvents();
@@ -1241,6 +1621,12 @@
           tabs[i].addEventListener("click", onTabClick);
         }
 
+        addTodayTaskBtn.addEventListener("click", function () {
+          openTaskEditor(currentDayKey, null);
+        });
+        addSelectedTaskBtn.addEventListener("click", function () {
+          openTaskEditor(selectedDayKey, null);
+        });
         fullscreenBtn.addEventListener("click", toggleFullscreen);
         enableAlertBtn.addEventListener("click", function () {
           ensureAudioReady();
@@ -1261,10 +1647,14 @@
         });
 
         resetTodayBtn.addEventListener("click", function () {
+          var dayState;
           if (!window.confirm("ต้องการล้างเช็กลิสต์ของวันนี้ใช่ไหม")) {
             return;
           }
-          state[currentDayKey] = { tasks: {}, updatedAt: new Date().toISOString(), closedAt: null };
+          dayState = getDayState(currentDayKey, true);
+          dayState.tasks = {};
+          dayState.closedAt = null;
+          dayState.updatedAt = new Date().toISOString();
           saveState();
           renderAll();
           showToast("ล้างเช็กลิสต์วันนี้แล้ว");
@@ -1285,6 +1675,19 @@
         });
 
         document.addEventListener("fullscreenchange", syncFullscreenUI);
+        sheetBackdropEl.addEventListener("click", closeTaskEditor);
+        closeEditorBtn.addEventListener("click", closeTaskEditor);
+        deleteTaskBtn.addEventListener("click", deleteTaskFromEditor);
+        saveTaskBtn.addEventListener("click", saveTaskFromEditor);
+        editorTitleInput.addEventListener("input", updateEditorPreview);
+        editorNoteInput.addEventListener("input", updateEditorPreview);
+        editorImportantInput.addEventListener("change", updateEditorPreview);
+        editorCutoffInput.addEventListener("change", updateEditorPreview);
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && editorState.open) {
+            closeTaskEditor();
+          }
+        });
       }
 
       function renderAll() {
@@ -1303,18 +1706,20 @@
 
       function renderTasks() {
         var todayState = getDayState(currentDayKey, true);
+        var schedule = getScheduleForDay(currentDayKey, true);
         var now = new Date();
         var minutesNow = now.getHours() * 60 + now.getMinutes();
         var html = "";
         var i;
 
-        for (i = 0; i < tasks.length; i++) {
-          var task = tasks[i];
+        for (i = 0; i < schedule.length; i++) {
+          var task = schedule[i];
           var done = !!todayState.tasks[task.id];
-          var active = minutesNow >= timeToMinutes(task.start) && minutesNow < timeToMinutes(task.end);
+          var taskWindow = getTaskWindow(task);
+          var active = minutesNow >= taskWindow.startMinutes && minutesNow < taskWindow.endMinutes;
           var classes = "task";
           var flags = "";
-          var helpText = task.detail;
+          var helpText = buildTaskHelpText(task);
 
           if (task.cutoff) {
             classes += " cutoff";
@@ -1343,9 +1748,10 @@
               '</label>' +
               '<div class="task-main">' +
                 '<div class="task-top">' +
-                  '<span class="task-time">' + task.start + " - " + task.end + '</span>' +
+                  '<span class="task-time">' + taskWindow.label + '</span>' +
                   '<div class="task-flags">' +
                     flags +
+                    '<button class="task-edit-btn" type="button" data-edit-day-key="' + currentDayKey + '" data-edit-task-id="' + task.id + '">แก้</button>' +
                     '<details class="info-pop task-help">' +
                       '<summary class="info-trigger" aria-label="คำอธิบาย ' + escapeHtml(task.title) + '">i</summary>' +
                       '<div class="info-panel">' + escapeHtml(helpText) + '</div>' +
@@ -1357,12 +1763,18 @@
             '</article>';
         }
 
+        if (!schedule.length) {
+          html = '<div class="empty-text">วันนี้ยังไม่มีงานในตาราง กด "+ เพิ่มงาน" เพื่อเริ่มจัดแผนของวันได้เลย</div>';
+        }
+
         taskListEl.innerHTML = html;
 
         var inputs = taskListEl.querySelectorAll("input[type='checkbox']");
         for (i = 0; i < inputs.length; i++) {
           inputs[i].addEventListener("change", onToggleTask);
         }
+
+        bindTaskEditButtons(taskListEl);
       }
 
       function onToggleTask(event) {
@@ -1494,17 +1906,17 @@
 
       function renderSelectedDay() {
         var info = getCompletionInfo(selectedDayKey);
+        var schedule = getScheduleForDay(selectedDayKey, false);
         var dateParts = selectedDayKey.split("-");
         var dateObj = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
         var future = selectedDayKey > currentDayKey;
-        var editable = !future;
         var badgesHtml = "";
         var tasksHtml = "";
         var i;
 
         selectedDateTitleEl.textContent = "รายละเอียด " + formatDateKey(selectedDayKey);
         if (future) {
-          selectedDateHintEl.textContent = "วันในอนาคต แสดงตามตารางที่วางไว้ ยังแก้ไขไม่ได้";
+          selectedDateHintEl.textContent = "วันในอนาคตยังแก้ตารางได้ แต่ยังไม่ควรติ๊กงานล่วงหน้า";
         } else if (selectedDayKey === currentDayKey) {
           selectedDateHintEl.textContent = info.closedAt ? "วันนี้จบวันแล้ว แต่ยังกลับมาแก้เช็กลิสต์ได้" : "วันนี้ยังแก้เช็กลิสต์ได้ตามปกติ";
         } else {
@@ -1518,41 +1930,538 @@
         badgesHtml += '<span class="detail-badge">' + (info.closedAt ? "จบวันแล้ว" : "ยังไม่จบวัน") + '</span>';
         selectedDateBadgesEl.innerHTML = badgesHtml;
 
-        for (i = 0; i < tasks.length; i++) {
-          var task = tasks[i];
+        addSelectedTaskBtn.disabled = false;
+        addSelectedTaskBtn.style.opacity = "1";
+
+        for (i = 0; i < schedule.length; i++) {
+          var task = schedule[i];
           var done = !!info.tasks[task.id];
+          var taskWindow = getTaskWindow(task);
           tasksHtml += '' +
-            '<label class="detail-task' + (done ? " done" : "") + (editable ? "" : " disabled") + '">' +
+            '<label class="detail-task' + (done ? " done" : "") + (future ? " disabled" : "") + '">' +
               '<span class="detail-check">' +
-                '<input type="checkbox" data-history-day-key="' + selectedDayKey + '" data-history-task-id="' + task.id + '"' + (done ? " checked" : "") + (editable ? "" : " disabled") + '>' +
+                '<input type="checkbox" data-history-day-key="' + selectedDayKey + '" data-history-task-id="' + task.id + '"' + (done ? " checked" : "") + (future ? " disabled" : "") + '>' +
                 '<span class="check-box">' + (done ? "✓" : "") + '</span>' +
               '</span>' +
               '<div>' +
-                '<strong>' + escapeHtml(task.title) + '</strong>' +
-                '<span>' + task.start + " - " + task.end + " • " + escapeHtml(task.detail) + '</span>' +
+                '<div class="detail-task-head">' +
+                  '<strong>' + escapeHtml(task.title) + '</strong>' +
+                  '<button class="detail-edit-btn" type="button" data-edit-day-key="' + selectedDayKey + '" data-edit-task-id="' + task.id + '">แก้</button>' +
+                '</div>' +
+                '<span>' + taskWindow.label + " • " + escapeHtml(buildTaskHelpText(task)) + '</span>' +
               '</div>' +
             '</label>';
         }
 
+        if (!schedule.length) {
+          tasksHtml = '<div class="empty-text">วันนี้ยังไม่มีงานในตาราง กด "+ เพิ่มงาน" เพื่อเริ่มวางแผนของวันนั้นได้เลย</div>';
+        }
+
         selectedTaskListEl.innerHTML = tasksHtml;
 
-        if (editable) {
+        if (!future) {
           var inputs = selectedTaskListEl.querySelectorAll("input[type='checkbox']");
           for (i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener("change", onHistoryTaskToggle);
           }
         }
+
+        bindTaskEditButtons(selectedTaskListEl);
+      }
+
+      function openTaskEditor(dayKey, taskId) {
+        var schedule = cloneSchedule(getScheduleForDay(dayKey, false));
+        var task = taskId ? findTaskById(schedule, taskId) : null;
+        var defaults = task ? buildEditorValuesFromTask(task) : getNewTaskDefaults(schedule);
+
+        editorState.open = true;
+        editorState.dayKey = dayKey;
+        editorState.taskId = task ? task.id : createTaskId(dayKey);
+        editorState.isNew = !task;
+        editorState.values = defaults;
+
+        editorDateLabelEl.textContent = "ตารางวันที่ " + formatDateKey(dayKey);
+        editorTitleEl.textContent = task ? "แก้งานในตาราง" : "เพิ่มงานใหม่";
+        editorTitleInput.value = defaults.title;
+        editorNoteInput.value = defaults.detail;
+        editorImportantInput.checked = !!defaults.critical;
+        editorCutoffInput.checked = !!defaults.cutoff;
+        deleteTaskBtn.disabled = !task;
+        deleteTaskBtn.style.opacity = task ? "1" : "0.55";
+
+        renderEditorWheels();
+        updateEditorPreview();
+        editorSheetEl.hidden = false;
+        document.body.style.overflow = "hidden";
+
+        window.setTimeout(function () {
+          editorTitleInput.focus();
+          editorTitleInput.select();
+        }, 30);
+      }
+
+      function closeTaskEditor() {
+        editorState.open = false;
+        editorState.dayKey = "";
+        editorState.taskId = "";
+        editorState.isNew = true;
+        editorState.values = null;
+        editorSheetEl.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function renderEditorWheels() {
+        renderWheel("startHourWheel", "startHour", HOUR_OPTIONS, editorState.values.startHour);
+        renderWheel("startMinuteWheel", "startMinute", TIME_MINUTE_OPTIONS, editorState.values.startMinute);
+        renderWheel("durationHourWheel", "durationHour", DURATION_HOUR_OPTIONS, editorState.values.durationHour);
+        renderWheel("durationMinuteWheel", "durationMinute", TIME_MINUTE_OPTIONS, editorState.values.durationMinute);
+      }
+
+      function renderWheel(elementId, wheelType, options, selectedValue) {
+        var wheelEl = document.getElementById(elementId);
+        var html = '<div class="wheel-list">';
+        var i;
+
+        for (i = 0; i < options.length; i++) {
+          html += '<button class="wheel-item' + (options[i] === selectedValue ? ' selected' : '') + '" type="button" data-wheel-value="' + options[i] + '">' + formatWheelValue(wheelType, options[i]) + '</button>';
+        }
+        html += "</div>";
+
+        wheelEl.innerHTML = html;
+
+        if (!wheelEl.dataset.bound) {
+          wheelEl.addEventListener("scroll", onWheelScroll);
+          wheelEl.addEventListener("click", onWheelClick);
+          wheelEl.dataset.bound = "1";
+        }
+
+        wheelEl.scrollTop = getWheelIndex(wheelType, selectedValue) * WHEEL_ITEM_HEIGHT;
+      }
+
+      function onWheelScroll(event) {
+        var wheelEl = event.currentTarget;
+        window.clearTimeout(wheelEl._snapTimer);
+        wheelEl._snapTimer = window.setTimeout(function () {
+          snapWheelToClosest(wheelEl);
+        }, 60);
+      }
+
+      function onWheelClick(event) {
+        var wheelEl = event.currentTarget;
+        var button = event.target.closest(".wheel-item");
+        var value;
+
+        if (!button) {
+          return;
+        }
+
+        value = Number(button.getAttribute("data-wheel-value"));
+        setWheelValue(wheelEl.getAttribute("data-wheel"), value, true);
+      }
+
+      function snapWheelToClosest(wheelEl) {
+        var wheelType = wheelEl.getAttribute("data-wheel");
+        var options = getWheelOptions(wheelType);
+        var index = Math.round(wheelEl.scrollTop / WHEEL_ITEM_HEIGHT);
+
+        if (index < 0) {
+          index = 0;
+        }
+        if (index > options.length - 1) {
+          index = options.length - 1;
+        }
+
+        setWheelValue(wheelType, options[index], true);
+      }
+
+      function setWheelValue(wheelType, value, syncScroll) {
+        var key = wheelType;
+        var wheelEl = getWheelElement(wheelType);
+        var items;
+        var i;
+
+        if (!editorState.values) {
+          return;
+        }
+
+        editorState.values[key] = value;
+        items = wheelEl.querySelectorAll(".wheel-item");
+        for (i = 0; i < items.length; i++) {
+          items[i].classList.toggle("selected", Number(items[i].getAttribute("data-wheel-value")) === value);
+        }
+
+        if (syncScroll) {
+          wheelEl.scrollTop = getWheelIndex(wheelType, value) * WHEEL_ITEM_HEIGHT;
+        }
+
+        updateEditorPreview();
+      }
+
+      function updateEditorPreview() {
+        var startHour;
+        var startMinute;
+        var durationHour;
+        var durationMinute;
+        var durationMinutes;
+        var startMinutes;
+        var endMinutes;
+        var previewTask;
+
+        if (!editorState.values) {
+          return;
+        }
+
+        startHour = editorState.values.startHour;
+        startMinute = editorState.values.startMinute;
+        durationHour = editorState.values.durationHour;
+        durationMinute = editorState.values.durationMinute;
+        durationMinutes = durationHour * 60 + durationMinute;
+        startMinutes = startHour * 60 + startMinute;
+        endMinutes = startMinutes + durationMinutes;
+
+        previewTask = {
+          title: editorTitleInput.value.trim() || "งานใหม่",
+          detail: editorNoteInput.value.trim(),
+          start: pad(startHour) + ":" + pad(startMinute),
+          durationMinutes: durationMinutes,
+          critical: editorImportantInput.checked,
+          cutoff: editorCutoffInput.checked
+        };
+
+        editorPreviewText.textContent = (durationMinutes ? getTaskWindow(previewTask).label : "กรุณาเลือกเวลาอย่างน้อย 5 นาที") + (editorImportantInput.checked ? " • งานสำคัญ" : "") + (editorCutoffInput.checked ? " • ตัดรอบ" : "") + (endMinutes > 24 * 60 ? " • เลยเที่ยงคืน" : "");
+      }
+
+      function saveTaskFromEditor() {
+        var dayState;
+        var schedule;
+        var task;
+        var taskIndex;
+        var durationMinutes;
+        var title;
+
+        if (!editorState.values) {
+          return;
+        }
+
+        title = editorTitleInput.value.trim();
+        durationMinutes = editorState.values.durationHour * 60 + editorState.values.durationMinute;
+
+        if (!title) {
+          showToast("กรุณาใส่งานที่ต้องทำ");
+          editorTitleInput.focus();
+          return;
+        }
+
+        if (durationMinutes < 5) {
+          showToast("ระยะเวลาควรอย่างน้อย 5 นาที");
+          return;
+        }
+
+        dayState = getDayState(editorState.dayKey, true);
+        schedule = dayState.schedule ? cloneSchedule(dayState.schedule) : cloneSchedule(getScheduleForDay(editorState.dayKey, false));
+        task = {
+          id: editorState.taskId,
+          title: title,
+          detail: editorNoteInput.value.trim(),
+          start: pad(editorState.values.startHour) + ":" + pad(editorState.values.startMinute),
+          durationMinutes: durationMinutes,
+          critical: editorImportantInput.checked,
+          cutoff: editorCutoffInput.checked
+        };
+
+        taskIndex = findTaskIndexById(schedule, editorState.taskId);
+        if (taskIndex >= 0) {
+          schedule[taskIndex] = task;
+        } else {
+          schedule.push(task);
+        }
+
+        dayState.schedule = sortSchedule(schedule);
+        dayState.updatedAt = new Date().toISOString();
+        pruneTaskStateForDay(editorState.dayKey);
+        saveState();
+        closeTaskEditor();
+        renderAll();
+        showToast(taskIndex >= 0 ? "อัปเดตงานแล้ว" : "เพิ่มงานใหม่แล้ว");
+      }
+
+      function deleteTaskFromEditor() {
+        var dayState;
+        var schedule;
+        var taskIndex;
+
+        if (!editorState.values || editorState.isNew) {
+          closeTaskEditor();
+          return;
+        }
+
+        if (!window.confirm("ต้องการลบงานนี้ออกจากตารางหรือไม่")) {
+          return;
+        }
+
+        dayState = getDayState(editorState.dayKey, true);
+        schedule = dayState.schedule ? cloneSchedule(dayState.schedule) : cloneSchedule(getScheduleForDay(editorState.dayKey, false));
+        taskIndex = findTaskIndexById(schedule, editorState.taskId);
+
+        if (taskIndex >= 0) {
+          schedule.splice(taskIndex, 1);
+        }
+        delete dayState.tasks[editorState.taskId];
+        dayState.schedule = sortSchedule(schedule);
+        dayState.updatedAt = new Date().toISOString();
+        pruneTaskStateForDay(editorState.dayKey);
+        saveState();
+        closeTaskEditor();
+        renderAll();
+        showToast("ลบงานออกจากตารางแล้ว");
+      }
+
+      function bindTaskEditButtons(container) {
+        var buttons = container.querySelectorAll("[data-edit-task-id]");
+        var i;
+
+        for (i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openTaskEditor(this.getAttribute("data-edit-day-key"), this.getAttribute("data-edit-task-id"));
+          });
+        }
+      }
+
+      function buildEditorValuesFromTask(task) {
+        var startParts = task.start.split(":");
+        var duration = task.durationMinutes || durationBetween(task.start, task.end);
+
+        return {
+          title: task.title || "",
+          detail: task.detail || "",
+          critical: !!task.critical,
+          cutoff: !!task.cutoff,
+          startHour: Number(startParts[0]),
+          startMinute: Number(startParts[1]),
+          durationHour: Math.floor(duration / 60),
+          durationMinute: duration % 60
+        };
+      }
+
+      function getNewTaskDefaults(schedule) {
+        var lastTask = schedule.length ? schedule[schedule.length - 1] : null;
+        var nextStart = lastTask ? roundToStep(getTaskWindow(lastTask).endMinutes, 5) : 7 * 60;
+
+        if (nextStart >= 24 * 60) {
+          nextStart = 20 * 60;
+        }
+
+        return {
+          title: "",
+          detail: "",
+          critical: false,
+          cutoff: false,
+          startHour: Math.floor(nextStart / 60),
+          startMinute: nextStart % 60,
+          durationHour: 1,
+          durationMinute: 0
+        };
+      }
+
+      function getWheelOptions(wheelType) {
+        if (wheelType === "startHour") return HOUR_OPTIONS;
+        if (wheelType === "startMinute") return TIME_MINUTE_OPTIONS;
+        if (wheelType === "durationHour") return DURATION_HOUR_OPTIONS;
+        return TIME_MINUTE_OPTIONS;
+      }
+
+      function getWheelElement(wheelType) {
+        if (wheelType === "startHour") return document.getElementById("startHourWheel");
+        if (wheelType === "startMinute") return document.getElementById("startMinuteWheel");
+        if (wheelType === "durationHour") return document.getElementById("durationHourWheel");
+        return document.getElementById("durationMinuteWheel");
+      }
+
+      function getWheelIndex(wheelType, value) {
+        var options = getWheelOptions(wheelType);
+        var index = options.indexOf(value);
+        return index >= 0 ? index : 0;
+      }
+
+      function formatWheelValue(wheelType, value) {
+        if (wheelType === "durationHour") {
+          return String(value);
+        }
+        return pad(value);
+      }
+
+      function getTaskWindow(task) {
+        var startMinutes = timeToMinutes(task.start);
+        var duration = task.durationMinutes || durationBetween(task.start, task.end) || 60;
+        var endMinutes = startMinutes + duration;
+
+        return {
+          startMinutes: startMinutes,
+          endMinutes: endMinutes,
+          label: pad(Math.floor(startMinutes / 60)) + ":" + pad(startMinutes % 60) + " - " + pad(Math.floor((endMinutes % (24 * 60)) / 60)) + ":" + pad(endMinutes % 60) + " • " + formatDuration(duration)
+        };
+      }
+
+      function buildTaskHelpText(task) {
+        var parts = [];
+
+        if (task.detail) {
+          parts.push(task.detail);
+        }
+        parts.push("ใช้เวลา " + formatDuration(task.durationMinutes || durationBetween(task.start, task.end) || 0));
+        if (task.critical) {
+          parts.push("งานสำคัญ");
+        }
+        if (task.cutoff) {
+          parts.push("ช่วงตัดรอบ");
+        }
+
+        return parts.join(" • ");
+      }
+
+      function formatDuration(minutes) {
+        var hours = Math.floor(minutes / 60);
+        var mins = minutes % 60;
+        var parts = [];
+
+        if (hours) {
+          parts.push(hours + " ชม.");
+        }
+        if (mins) {
+          parts.push(mins + " นาที");
+        }
+        if (!parts.length) {
+          return "0 นาที";
+        }
+        return parts.join(" ");
+      }
+
+      function findTaskById(schedule, taskId) {
+        var i;
+        for (i = 0; i < schedule.length; i++) {
+          if (schedule[i].id === taskId) {
+            return schedule[i];
+          }
+        }
+        return null;
+      }
+
+      function findTaskIndexById(schedule, taskId) {
+        var i;
+        for (i = 0; i < schedule.length; i++) {
+          if (schedule[i].id === taskId) {
+            return i;
+          }
+        }
+        return -1;
+      }
+
+      function createTaskId(dayKey) {
+        return "task-" + dayKey.replace(/-/g, "") + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 6);
+      }
+
+      function pruneTaskStateForDay(dayKey) {
+        var dayState = getDayState(dayKey, false);
+        var schedule = getScheduleForDay(dayKey, false);
+        var allowed = {};
+        var keys;
+        var i;
+
+        for (i = 0; i < schedule.length; i++) {
+          allowed[schedule[i].id] = true;
+        }
+
+        keys = Object.keys(dayState.tasks || {});
+        for (i = 0; i < keys.length; i++) {
+          if (!allowed[keys[i]]) {
+            delete dayState.tasks[keys[i]];
+          }
+        }
+      }
+
+      function cloneSchedule(schedule) {
+        return normalizeSchedule(schedule);
+      }
+
+      function normalizeSchedule(rawSchedule) {
+        var list = Array.isArray(rawSchedule) ? rawSchedule : [];
+        var normalized = [];
+        var i;
+        var item;
+        var duration;
+
+        for (i = 0; i < list.length; i++) {
+          item = list[i] || {};
+          duration = item.durationMinutes || durationBetween(item.start || "09:00", item.end || "10:00");
+          if (duration <= 0) {
+            duration = 60;
+          }
+          normalized.push({
+            id: item.id || createTaskId("legacy"),
+            title: item.title || "งานไม่มีชื่อ",
+            detail: item.detail || "",
+            start: isValidTime(item.start) ? item.start : "09:00",
+            durationMinutes: duration,
+            critical: !!item.critical,
+            cutoff: !!item.cutoff
+          });
+        }
+
+        return sortSchedule(normalized);
+      }
+
+      function sortSchedule(schedule) {
+        return schedule.slice().sort(function (a, b) {
+          return timeToMinutes(a.start) - timeToMinutes(b.start);
+        });
+      }
+
+      function durationBetween(start, end) {
+        if (!start || !end) {
+          return 0;
+        }
+        return Math.max(timeToMinutes(end) - timeToMinutes(start), 0);
+      }
+
+      function roundToStep(value, step) {
+        return Math.round(value / step) * step;
+      }
+
+      function isValidTime(value) {
+        return /^\d{2}:\d{2}$/.test(String(value || ""));
+      }
+
+      function buildRange(from, to, step) {
+        var list = [];
+        var value;
+
+        for (value = from; value <= to; value += step) {
+          list.push(value);
+        }
+        return list;
       }
 
       function getCompletionInfo(dayKey) {
         var dayEntry = getDayState(dayKey, false);
+        var schedule = getScheduleForDay(dayKey, false);
         var dayTasks = dayEntry.tasks || {};
-        var doneCount = Object.keys(dayTasks).length;
-        var total = tasks.length;
-        var percent = Math.round((doneCount / total) * 100);
+        var doneCount = 0;
+        var total = schedule.length;
+        var percent = total ? Math.round((doneCount / total) * 100) : 0;
+        var i;
+
+        for (i = 0; i < schedule.length; i++) {
+          if (dayTasks[schedule[i].id]) {
+            doneCount += 1;
+          }
+        }
+        percent = total ? Math.round((doneCount / total) * 100) : 0;
 
         return {
           key: dayKey,
+          schedule: schedule,
           tasks: dayTasks,
           doneCount: doneCount,
           total: total,
@@ -1566,7 +2475,7 @@
       function getMonthStats(year, month) {
         var prefix = year + "-" + pad(month + 1);
         var keys = Object.keys(state).filter(function (key) {
-          return key.indexOf(prefix) === 0;
+          return key.indexOf(prefix) === 0 && key <= currentDayKey;
         }).sort();
 
         if (!keys.length) {
@@ -1601,37 +2510,51 @@
       function getCutoffCompletionForMonth(year, month) {
         var prefix = year + "-" + pad(month + 1);
         var keys = Object.keys(state).filter(function (key) {
-          return key.indexOf(prefix) === 0;
+          return key.indexOf(prefix) === 0 && key <= currentDayKey;
         });
-        var cutoffIds = ["morning-ship", "afternoon-ship"];
 
         if (!keys.length) {
           return { average: 0 };
         }
 
         var total = 0;
+        var countedDays = 0;
         var i;
         var j;
 
         for (i = 0; i < keys.length; i++) {
           var dayTasks = state[keys[i]] && state[keys[i]].tasks ? state[keys[i]].tasks : {};
+          var daySchedule = getScheduleForDay(keys[i], false);
+          var cutoffIds = [];
           var done = 0;
+
+          for (j = 0; j < daySchedule.length; j++) {
+            if (daySchedule[j].cutoff) {
+              cutoffIds.push(daySchedule[j].id);
+            }
+          }
+
+          if (!cutoffIds.length) {
+            continue;
+          }
+
           for (j = 0; j < cutoffIds.length; j++) {
             if (dayTasks[cutoffIds[j]]) {
               done += 1;
             }
           }
           total += Math.round((done / cutoffIds.length) * 100);
+          countedDays += 1;
         }
 
         return {
-          average: Math.round(total / keys.length)
+          average: countedDays ? Math.round(total / countedDays) : 0
         };
       }
 
       function getRecentTrackedDays(limit) {
         var keys = Object.keys(state).filter(function (key) {
-          return state[key] && state[key].tasks && Object.keys(state[key].tasks).length > 0;
+          return key <= currentDayKey && getCompletionInfo(key).doneCount > 0;
         }).sort().reverse();
 
         var result = [];
@@ -1692,6 +2615,7 @@
       }
 
       function runAlertChecks(now) {
+        var schedule = getScheduleForDay(currentDayKey, false);
         if (!alertState.enabled) {
           return;
         }
@@ -1707,11 +2631,11 @@
         var currentHHMM = pad(now.getHours()) + ":" + pad(now.getMinutes());
         var i;
 
-        for (i = 0; i < tasks.length; i++) {
-          if (tasks[i].start === currentHHMM) {
+        for (i = 0; i < schedule.length; i++) {
+          if (schedule[i].start === currentHHMM) {
             ensureAudioReady();
-            beep(tasks[i].cutoff ? 4 : 2);
-            showToast("เริ่มกิจกรรมใหม่: " + tasks[i].title);
+            beep(schedule[i].cutoff ? 4 : 2);
+            showToast("เริ่มกิจกรรมใหม่: " + schedule[i].title);
           }
         }
 
@@ -1955,10 +2879,32 @@
 
       function getDayState(dayKey, createIfMissing) {
         if (!state[dayKey] && createIfMissing) {
-          state[dayKey] = { tasks: {}, updatedAt: new Date().toISOString(), closedAt: null };
+          state[dayKey] = {
+            tasks: {},
+            schedule: null,
+            updatedAt: new Date().toISOString(),
+            closedAt: null
+          };
           saveState();
         }
-        return state[dayKey] || { tasks: {}, updatedAt: null, closedAt: null };
+        return state[dayKey] || { tasks: {}, schedule: null, updatedAt: null, closedAt: null };
+      }
+
+      function getScheduleForDay(dayKey, createIfMissing) {
+        var dayState = getDayState(dayKey, createIfMissing);
+
+        if (!dayState.schedule) {
+          if (createIfMissing) {
+            dayState.schedule = cloneSchedule(DEFAULT_SCHEDULE);
+            dayState.updatedAt = new Date().toISOString();
+            saveState();
+          } else {
+            return cloneSchedule(DEFAULT_SCHEDULE);
+          }
+        }
+
+        dayState.schedule = sortSchedule(dayState.schedule);
+        return dayState.schedule;
       }
 
       function normalizeState(rawState) {
@@ -1978,6 +2924,7 @@
           entry = rawState[key] || {};
           normalized[key] = {
             tasks: entry.tasks && typeof entry.tasks === "object" ? entry.tasks : {},
+            schedule: entry.schedule ? normalizeSchedule(entry.schedule) : null,
             updatedAt: entry.updatedAt || null,
             closedAt: entry.closedAt || null
           };
